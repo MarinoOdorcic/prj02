@@ -20,14 +20,13 @@ public:
 
     double waveDirection = 10.;
     double wavePeriod = 7.5;
-
-
     std::vector<double> waveDirectionHeading;
     std::vector<double> wavePeriodHeading;
     std::vector<std::vector<double>> waveHeightData;
 
     void loadFullData();
     void loadSymmetricData();
+    void loadTestData();
     void mirrorExtendData();
     void printTable();
 

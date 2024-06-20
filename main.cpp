@@ -6,39 +6,81 @@
 
 #include "fmt/core.h"
 #include "WaveData.h"
-#include "Interpolator.h"
-#include "Linear.h"
-
-
-std::vector<int> findBounds(std::vector<double> vec, double target) {
-
-    auto upper = std::upper_bound(vec.begin(), vec.end(), target); // First element greater than target
-    int upperIndex = static_cast<int>(std::distance(vec.begin(), upper));
-    int lowerIndex = upperIndex-1;
-    return {lowerIndex, upperIndex};
-}
-
-double solve(double x, double x1, double x2, double y1, double y2){
-    return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1);}
+#include "InterpolationPolicies.h"
+#include "Interpolator2D.h"
 
 
 int main() {
 
     WaveData waveTable;
-//    waveTable.loadFullData();
-    waveTable.loadSymmetricData();
-    waveTable.mirrorExtendData();
+    waveTable.loadTestData();
+    waveTable.loadFullData();
+//    waveTable.loadSymmetricData();
+//    waveTable.mirrorExtendData();
     waveTable.printTable();
 
-//    Interpolator<Linear, Linear> interpolator(waveTable.waveDirectionHeading,
-//                                              waveTable.wavePeriodHeading,
-//                                              waveTable.waveHeightData);
+    std::vector<std::vector<double>> data = waveTable.waveHeightData;
+    std::vector<double> colHeadings = waveTable.waveDirectionHeading;
+    std::vector<double> rowHeadings = waveTable.wavePeriodHeading;
 
+    double x = 67.5;
+    double y = 3;
 
-    std::vector<double> x = {1,2,3};
-//    Interpolator<Linear, Linear> interpolator(x);
+    Interpolator2D< NearestNeighborInterpolation, LinearInterpolation> interpolatorLinearNearest(
+            NearestNeighborInterpolation(),
+            LinearInterpolation(),
+            rowHeadings,
+            colHeadings
+    );
+    Interpolator2D<NearestNeighborInterpolation, CubicInterpolation> interpolatorCubicNearest(
+            NearestNeighborInterpolation(),
+            CubicInterpolation(),
+            rowHeadings,
+            colHeadings
+    );
+    Interpolator2D<LinearInterpolation, NearestNeighborInterpolation> interpolatorNearestLinear(
+            LinearInterpolation(),
+            NearestNeighborInterpolation(),
+            rowHeadings,
+            colHeadings
+    );
+    Interpolator2D<CubicInterpolation, NearestNeighborInterpolation> interpolatorNearestCubic(
+            CubicInterpolation(),
+            NearestNeighborInterpolation(),
+            rowHeadings,
+            colHeadings
+    );
+    Interpolator2D<CubicInterpolation, CubicInterpolation> interpolatorLinearLinear(
+            CubicInterpolation(),
+            CubicInterpolation(),
+            rowHeadings,
+            colHeadings
+    );
+    Interpolator2D<LinearInterpolation, LinearInterpolation> interpolatorCubicCubic(
+            LinearInterpolation(),
+            LinearInterpolation(),
+            rowHeadings,
+            colHeadings
+    );
 
+    double resultLinearNearest = interpolatorLinearNearest.interpolate(data, x, y);
+    double resultCubicNearest = interpolatorCubicNearest.interpolate(data, x, y);
+    double resultNearestLinear = interpolatorNearestLinear.interpolate(data, x, y);
+    double resultNearestCubic = interpolatorNearestCubic.interpolate(data, x, y);
+    double resultLinearLinear = interpolatorLinearLinear.interpolate(data, x, y);
+    double resultCubicCubic = interpolatorCubicCubic.interpolate(data, x, y);
 
+    fmt::print("\nInterpolated value at ({}, {}",x,y);
+    fmt::print("\nLinear-Nearest:\t{:.5f}", resultLinearNearest);
+    fmt::print("\nCubic-Nearest:\t{:.5f}", resultCubicNearest);
+    fmt::print("\nNearest-Linear:\t{:.5f}", resultNearestLinear);
+    fmt::print("\nNearest-Cubic:\t{:.5f}", resultNearestCubic);
+    fmt::print("\nLinear-Linear:\t{:.5f}", resultLinearLinear);
+    fmt::print("\nCubic-Cubic:\t{:.5f}", resultCubicCubic);
+
+//    std::cout << "Linear-Nearest Interpolated value at (" << x << ", " << y << "): " << resultLinearNearest << std::endl;
+//    std::cout<<std::endl;
+//    std::cout << "Cubic Interpolated value at (" << x << ", " << y << "): " << resultCubicNearest << std::endl;
 
 
 

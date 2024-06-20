@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(prj01 LANGUAGES CXX)
+project(prj02 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,31 +18,28 @@ if(NOT fmt_POPULATED)
 endif()
 
 
-FetchContent_Declare(Eigen
-        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-        GIT_TAG origin/master) # or whatever tag you want
-
-FetchContent_MakeAvailable(Eigen)
-
-#FetchContent_GetProperties(eigen)
-#if(NOT eigen_POPULATED)
-#    FetchContent_Populate(eigen)
-#    add_subdirectory(${eigen_SOURCE_DIR} ${eigen_BINARY_DIR} EXCLUDE_FROM_ALL)
-#endif()
+#FetchContent_Declare(Eigen
+#        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+#        GIT_TAG origin/master) # or whatever tag you want
+#
+#FetchContent_MakeAvailable(Eigen)
+#
+##FetchContent_GetProperties(eigen)
+##if(NOT eigen_POPULATED)
+##    FetchContent_Populate(eigen)
+##    add_subdirectory(${eigen_SOURCE_DIR} ${eigen_BINARY_DIR} EXCLUDE_FROM_ALL)
+##endif()
 
 
 add_executable(prj02 main.cpp
-        NearestNeighbor.h
-        NearestNeighbor.cpp
-        Linear.h
-        Linear.cpp
-        Cubic.h
-        Cubic.cpp
-        Interpolator.h
-        Interpolator.cpp
         WaveData.h
-        WaveData.cpp)
+        WaveData.cpp
+        InterpolationPolicies.h
+        InterpolationPolicies.cpp
+        Interpolator2D.h
+        Interpolator2D.cpp)
 
 target_link_libraries(prj02
         fmt::fmt
-        Eigen3::Eigen)
+#        Eigen3::Eigen
+)
