@@ -23,8 +23,8 @@ int main() {
     std::vector<double> colHeadings = waveTable.waveDirectionHeading;
     std::vector<double> rowHeadings = waveTable.wavePeriodHeading;
 
-    double x = 67.5;
-    double y = 3;
+    double x = 112.5;
+    double y = 3.5;
 
     Interpolator2D< NearestNeighborInterpolation, LinearInterpolation> interpolatorLinearNearest(
             NearestNeighborInterpolation(),

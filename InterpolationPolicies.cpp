@@ -30,10 +30,10 @@ double CubicInterpolation::interpolate(const std::vector<double>& data, double p
     int x2 = std::max(0, std::min(size - 1, i + 1));
     int x3 = std::max(0, std::min(size - 1, i + 2));
 
-    std::cout<<data[x0]<<std::endl;
-    std::cout<<data[x1]<<std::endl;
-    std::cout<<data[x2]<<std::endl;
-    std::cout<<data[x3]<<std::endl;
+//    std::cout<<data[x0]<<std::endl;
+//    std::cout<<data[x1]<<std::endl;
+//    std::cout<<data[x2]<<std::endl;
+//    std::cout<<data[x3]<<std::endl;
 
 //    double t = position - i1;
 
