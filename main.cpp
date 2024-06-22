@@ -5,37 +5,58 @@
 #include <algorithm>
 
 #include "fmt/core.h"
+
+#include "ShipData.h"
 #include "WaveData.h"
 #include "InterpolationPolicies.h"
 #include "Interpolator2D.h"
 
+bool checkManeuver(ShipData shipData, WaveData waveData){
+    bool shipManeuver;
+
+    auto shipDirection = shipData.getDirection();
+    auto shipHeight = shipData.getHeight();
+    auto waveDirection = waveData.getDirection();
+    auto wavePeriod = waveData.getPeriod();
+
+    auto waveDirectionHeader = waveData.getDirectionHeader();
+    auto wavePeriodHeader = waveData.getPeriodHeader();
+    auto waveHeightData = waveData.getHeightData();
+
+    double relativeDirection = waveDirection - shipDirection;
+
+    Interpolator2D <LinearInterpolation,LinearInterpolation> interpolator;
+    double waveHeight = interpolator.interpolate(wavePeriodHeader,
+                                                 waveDirectionHeader,
+                                                 waveHeightData,
+                                                 relativeDirection,
+                                                 wavePeriod);
+
+    if (shipHeight > waveHeight){
+        fmt::print("\n{}",std::string(40, '-'));
+        fmt::print("\nShip maneuver safe");
+        fmt::print("\n{}",std::string(40, '-'));
+        return shipManeuver = true;
+    } else {
+        fmt::print("\n{}",std::string(40, '-'));
+        fmt::print("\nShip maneuver NOT safe!!!");
+        fmt::print("\n{}",std::string(40, '-'));
+        return shipManeuver = false;
+    }
+}
 
 int main() {
 
-    WaveData waveTable;
-    waveTable.loadTestData();
-    waveTable.loadFullData();
-//    waveTable.loadSymmetricData();
-//    waveTable.mirrorExtendData();
-    waveTable.printTable();
+    ShipData shipData(0, 7.1);
+    WaveData waveData(0, 12);
 
-    std::vector<std::vector<double>> data = waveTable.waveHeightData;
-    std::vector<double> colHeadings = waveTable.waveDirectionHeading;
-    std::vector<double> rowHeadings = waveTable.wavePeriodHeading;
+    waveData.loadTestData();
+    waveData.loadFullData();
+//    waveData.loadSymmetricData();
+//    waveData.mirrorExtendData();
+    waveData.printTable();
 
-    double x = 22.5;
-    double y = 6;
-
-    fmt::print("\nInterpolated value at ({}, {})\n",x,y);
-
-    Interpolator2D <CubicInterpolation, CubicInterpolation> interpolator;
-    double result = interpolator.interpolate(rowHeadings, colHeadings, data, x, y);
-//    fmt::print("\nCubic-Cubic:\t{:.5f}", result);
-
-//    Interpolator2D <LinearInterpolation, LinearInterpolation> interpolator2;
-//    result = interpolator2.interpolate(rowHeadings, colHeadings, data, x, y);
-//    fmt::print("\nLinear-Linear:\t{:.5f}", result);
-
+    bool shipManeuver = checkManeuver(shipData, waveData);
 
     return 0;
 }

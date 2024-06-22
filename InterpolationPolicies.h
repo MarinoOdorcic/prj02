@@ -4,12 +4,12 @@
 #include "iostream"
 #include <vector>
 #include <algorithm>
-#include <cmath>
+//#include <cmath>
 
 #include "fmt/core.h"
 #include <fmt/format.h>
 #include <fmt/ranges.h>
-#include <Eigen/Dense>
+//#include <Eigen/Dense>
 
 /* ------------------------------------------------------------------------- */
 struct LinearInterpolation {
@@ -31,7 +31,7 @@ struct NearestNeighborInterpolation {
 struct CubicInterpolation {
     double interpolate(const std::vector<double>& heading,
                        const std::vector<double>& data,
-                       double val) const;
+                       double x) const;
     static int pointsRequired();
 };
 

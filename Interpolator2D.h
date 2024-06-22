@@ -16,15 +16,16 @@ class Interpolator2D {
 private:
     RowInterpolationPolicy rowPolicy;
     ColInterpolationPolicy colPolicy;
-
+    double direction;
+    double height;
 public:
     Interpolator2D();
 
-    double interpolate( const std::vector<double>& rowHeadings,
-                        const std::vector<double>& colHeadings,
-                        const std::vector<std::vector<double>>& data,
+    double interpolate( std::vector<double>& rowHeadings,
+                        std::vector<double>& colHeadings,
+                        std::vector<std::vector<double>>& data,
                         double x,
-                        double y) const;
+                        double y);
     void print();
 };
 
