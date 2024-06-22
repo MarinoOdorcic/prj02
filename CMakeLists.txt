@@ -18,17 +18,17 @@ if(NOT fmt_POPULATED)
 endif()
 
 
-#FetchContent_Declare(Eigen
-#        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-#        GIT_TAG origin/master) # or whatever tag you want
-#
+FetchContent_Declare(Eigen
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+        GIT_TAG origin/master) # or whatever tag you want
+
 #FetchContent_MakeAvailable(Eigen)
-#
-##FetchContent_GetProperties(eigen)
-##if(NOT eigen_POPULATED)
-##    FetchContent_Populate(eigen)
-##    add_subdirectory(${eigen_SOURCE_DIR} ${eigen_BINARY_DIR} EXCLUDE_FROM_ALL)
-##endif()
+
+FetchContent_GetProperties(eigen)
+if(NOT eigen_POPULATED)
+    FetchContent_Populate(eigen)
+    add_subdirectory(${eigen_SOURCE_DIR} ${eigen_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
 
 
 add_executable(prj02 main.cpp
@@ -41,5 +41,5 @@ add_executable(prj02 main.cpp
 
 target_link_libraries(prj02
         fmt::fmt
-#        Eigen3::Eigen
+        Eigen3::Eigen
 )
