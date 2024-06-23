@@ -10,7 +10,6 @@
 
 #include "InterpolationPolicies.h"
 
-
 template <typename RowInterpolationPolicy, typename ColInterpolationPolicy>
 class Interpolator2D {
 private:
@@ -19,8 +18,8 @@ private:
     double direction;
     double height;
 public:
-    double interpolate( std::vector<double>& rowHeadings,
-                        std::vector<double>& colHeadings,
+    double interpolate( std::vector<double>& rowHeader,
+                        std::vector<double>& colHeader,
                         std::vector<std::vector<double>>& data,
                         double x,
                         double y);

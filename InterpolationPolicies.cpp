@@ -38,8 +38,8 @@ double NearestNeighborInterpolation::interpolate(const std::vector<double>& head
     }
 
     fmt::print("\nV:\t{}", x);
-    fmt::print("\nX:\t{}\t{}", data[i-1], data[i]);
-    fmt::print("\nY:\t{}\t{}", header[i - 1], header[i]);
+    fmt::print("\nX:\t{}\t{}", header[i - 1], header[i]);
+    fmt::print("\nY:\t{}\t{}", data[i-1], data[i]);
     fmt::print("\nI:\t{}\n", y);
     return y;
 }
@@ -95,7 +95,6 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
             y0 = data[index - 2];
         }
         if (index == data.size()-2){
-            fmt::print("\n{}",header[index]);
             x3 = header[index]*2 - header[index-1];
             y3 = data[index]*2 - data[index-1];
         } else {

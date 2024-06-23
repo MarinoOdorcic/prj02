@@ -1,16 +1,11 @@
-#include <vector>
-#include <cmath>
 #include <stdexcept>
-#include <iostream>
-#include <algorithm>
-
 #include "fmt/core.h"
-
 #include "ShipData.h"
 #include "WaveData.h"
 #include "InterpolationPolicies.h"
 #include "Interpolator2D.h"
 
+template <typename RowInterpolationPolicy, typename ColInterpolationPolicy>
 bool checkManeuver(ShipData shipData, WaveData waveData){
     bool shipManeuver;
 
@@ -25,14 +20,15 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
 
     double relativeDirection = waveDirection - shipDirection;
 
-    Interpolator2D <LinearInterpolation, CubicInterpolation> interpolator{};
+    Interpolator2D <RowInterpolationPolicy, ColInterpolationPolicy> interpolator{};
     double waveHeight = interpolator.interpolate(wavePeriodHeader,
                                                  waveDirectionHeader,
                                                  waveHeightData,
                                                  relativeDirection,
                                                  wavePeriod);
-//    waveData.printTable();
+    waveData.printTable();
     interpolator.print();
+    fmt::print("\nShip height:\t\t\t{:.5g}", shipHeight);
     if (shipHeight > waveHeight){
         fmt::print("\n{}",std::string(40, '-'));
         fmt::print("\nShip maneuver safe");
@@ -44,21 +40,20 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
         fmt::print("\n{}",std::string(40, '-'));
         return shipManeuver = false;
     }
-    return false;
 }
 
 int main() {
 
     ShipData shipData(0, 7.1);
-    WaveData waveData(45, 14);
+    WaveData waveData(60, 9.5);
 
     waveData.loadTestData();
     waveData.loadFullData();
     waveData.loadSymmetricData();
     waveData.mirrorExtendData();
 
-
-    bool shipManeuver = checkManeuver(shipData, waveData);
+    bool shipManeuver = checkManeuver <NearestNeighborInterpolation, LinearInterpolation>
+            (shipData, waveData);
 
     return 0;
 }

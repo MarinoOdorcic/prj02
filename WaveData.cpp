@@ -1,7 +1,5 @@
 #include "WaveData.h"
 
-
-
 /* ----- Constructors --------------------------------------- */
 WaveData::WaveData(double angle, double period) {
     waveDirection = angle;
