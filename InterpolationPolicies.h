@@ -4,38 +4,36 @@
 #include "iostream"
 #include <vector>
 #include <algorithm>
-//#include <cmath>
 
 #include "fmt/core.h"
 #include <fmt/format.h>
 #include <fmt/ranges.h>
-//#include <Eigen/Dense>
 
 /* ------------------------------------------------------------------------- */
 struct LinearInterpolation {
+    int pointsRequired = 2;
     double interpolate(const std::vector<double>& header,
                        const std::vector<double>& data,
                        double x,
                        int boundaryType) ;
-    int pointsRequired();
 };
 
 /* ------------------------------------------------------------------------- */
 struct NearestNeighborInterpolation {
+    int pointsRequired = 2;
     double interpolate(const std::vector<double>& header,
                        const std::vector<double>& data,
                        double x,
                        int boundaryType) ;
-    int pointsRequired();
 };
 
 /* ------------------------------------------------------------------------- */
 struct CubicInterpolation {
+    int pointsRequired = 4;
     double interpolate(const std::vector<double>& header,
                        const std::vector<double>& data,
                        double x,
                        int boundaryType) ;
-    int pointsRequired();
 };
 
 #endif //PRJ02_INTERPOLATIONPOLICIES_H

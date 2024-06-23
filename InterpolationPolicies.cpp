@@ -22,11 +22,8 @@ double LinearInterpolation::interpolate(const std::vector<double>& header,
     fmt::print("\nI:\t{}\n", y);
     return y;
 }
-int LinearInterpolation::pointsRequired() {
-    return 2;
-}
 
-/* ---------------------------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------------------------- */
 double NearestNeighborInterpolation::interpolate(const std::vector<double>& header,
                                                  const std::vector<double>& data,
                                                  double x,
@@ -46,10 +43,8 @@ double NearestNeighborInterpolation::interpolate(const std::vector<double>& head
     fmt::print("\nI:\t{}\n", y);
     return y;
 }
-int NearestNeighborInterpolation::pointsRequired() {
-    return 2;
-}
-/* ---------------------------------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------------------------------- */
 double CubicInterpolation::interpolate(const std::vector<double>& header,
                                        const std::vector<double>& data,
                                        double x,
@@ -61,20 +56,18 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
     double x0, x1, x2, x3;
     double y0, y1, y2, y3;
 
+    /* ----- Normal ----- */
     x1 = header[index - 1];
     x2 = header[index];
     y1 = data[index - 1];
     y2 = data[index];
-
-    fmt::print("{}", fmt::join(header, " "));
-    fmt::print("\n{} ",header[3]);
-
     if (boundaryType == 0){
         x0 = header[index - 2];
         x3 = header[index + 1];
         y0 = data[index - 2];
         y3 = data[index + 1];
 
+    /* ----- Circular ----- */
     } else if (boundaryType == 1){
         if (index == 1) {
 
@@ -92,6 +85,7 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
             y3 = data[index + 1];
         }
 
+    /* ----- Transmission ----- */
     } else {
         if (index == 2) {
             x0 = header[index-1]*2 - header[index];
@@ -130,6 +124,4 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
     fmt::print("\nI:\t{:.8g}\n", y);
     return y;
 }
-int CubicInterpolation::pointsRequired() {
-    return 4;
-}
+
