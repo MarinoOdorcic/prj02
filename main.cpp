@@ -25,13 +25,14 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
 
     double relativeDirection = waveDirection - shipDirection;
 
-    Interpolator2D <LinearInterpolation,LinearInterpolation> interpolator;
+    Interpolator2D <LinearInterpolation, CubicInterpolation> interpolator;
     double waveHeight = interpolator.interpolate(wavePeriodHeader,
                                                  waveDirectionHeader,
                                                  waveHeightData,
                                                  relativeDirection,
                                                  wavePeriod);
-
+//    waveData.printTable();
+    interpolator.print();
     if (shipHeight > waveHeight){
         fmt::print("\n{}",std::string(40, '-'));
         fmt::print("\nShip maneuver safe");
@@ -48,13 +49,13 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
 int main() {
 
     ShipData shipData(0, 7.1);
-    WaveData waveData(0, 12);
+    WaveData waveData(45, 1);
 
     waveData.loadTestData();
     waveData.loadFullData();
 //    waveData.loadSymmetricData();
 //    waveData.mirrorExtendData();
-    waveData.printTable();
+
 
     bool shipManeuver = checkManeuver(shipData, waveData);
 

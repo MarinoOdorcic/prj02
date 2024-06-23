@@ -6,13 +6,19 @@ double LinearInterpolation::interpolate(const std::vector<double>& heading,
                                         double x) const {
     auto it = std::upper_bound(heading.begin(), heading.end(), x);
     size_t i = it - heading.begin();
-    if (i==heading.size()) i = i-1;
 
+//    fmt::print("\n------{}",i);
+//    fmt::print("\n{:.8g}", fmt::join(data, " "));
+
+    if (i==heading.size()) i = i-1;
     auto x0 = heading[i-1];
     auto x1 = heading[i];
     auto y0 = data[i-1];
     auto y1 = data[i];
+
+
     auto y = y0 + (x-x0) * (y1-y0) / (x1-x0);
+
     return y;
 }
 int LinearInterpolation::pointsRequired() {
@@ -41,17 +47,35 @@ double CubicInterpolation::interpolate(const std::vector<double>& heading,
                                        const std::vector<double>& data,
                                        double x) const {
     auto it = std::upper_bound(heading.begin(), heading.end(), x);
-    int index = static_cast<int>(std::distance(heading.begin(), it));
+    size_t index = it - heading.begin();
 
-    auto x0 = heading[index - 2];
-    auto x1 = heading[index - 1];
-    auto x2 = heading[index];
-    auto x3 = heading[index + 1];
+    double x0;
+    double x1 = heading[index - 1];
+    double x2 = heading[index];
+    double x3;
 
-    auto y0 = data[index - 2];
-    auto y1 = data[index - 1];
-    auto y2 = data[index];
-    auto y3 = data[index + 1];
+    double y0;
+    double y1 = data[index - 1];
+    double y2 = data[index];
+    double y3;
+
+    if (index == 1) {
+        x0 = heading[heading.size()-2]-360;
+        y0 = data[data.size()-2];
+    } else {
+        x0 = heading[index - 2];
+        y0 = data[index - 2];
+    }
+    if (index == data.size()-1){
+        x3 = heading[1]+360;
+        y3 = data[1];
+    } else {
+        x3 = heading[index + 1];
+        y3 = data[index + 1];
+    }
+
+    fmt::print("\n\nX:\t{}\t{}\t{}\t{}", x0, x1, x2, x3);
+    fmt::print("\nY:\t{}\t{}\t{}\t{}\n", y0, y1, y2, y3);
 
     auto m0 = (y1 - y0) / (x1 - x0);
     auto m1 = (y2 - y1) / (x2 - x1);
