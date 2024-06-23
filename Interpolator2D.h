@@ -19,8 +19,6 @@ private:
     double direction;
     double height;
 public:
-    Interpolator2D();
-
     double interpolate( std::vector<double>& rowHeadings,
                         std::vector<double>& colHeadings,
                         std::vector<std::vector<double>>& data,

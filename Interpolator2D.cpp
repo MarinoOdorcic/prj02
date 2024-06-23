@@ -4,15 +4,13 @@
 #include "Interpolator2D.h"
 
 template <typename RowInterpolationPolicy, typename ColInterpolationPolicy>
-Interpolator2D<RowInterpolationPolicy, ColInterpolationPolicy>::Interpolator2D(){}
-
-template <typename RowInterpolationPolicy, typename ColInterpolationPolicy>
 double Interpolator2D<RowInterpolationPolicy, ColInterpolationPolicy>::interpolate(
         std::vector<double>& rowHeadings,
         std::vector<double>& colHeadings,
         std::vector<std::vector<double>>& data,
         double x,
         double y){
+
     direction = x;
 
     while (direction<0) direction = direction + 360;
@@ -25,33 +23,32 @@ double Interpolator2D<RowInterpolationPolicy, ColInterpolationPolicy>::interpola
     colHeadings.push_back(360);
 
     auto it = std::upper_bound(rowHeadings.begin(), rowHeadings.end(), y);
-    size_t i = it - rowHeadings.begin();
-    it = std::upper_bound(colHeadings.begin(), colHeadings.end(), y);
-    size_t j = it - colHeadings.begin();
+    size_t rowPosition = it - rowHeadings.begin();
+    it = std::upper_bound(colHeadings.begin(), colHeadings.end(), x);
+    size_t colPosition = it - colHeadings.begin();
 
-    auto nc = colPolicy.pointsRequired();
-    auto nr = rowPolicy.pointsRequired();
+    auto colPointsNumber = colPolicy.pointsRequired();
+    auto rowPointsNumber = rowPolicy.pointsRequired();
 
 
+    std::vector<double> rowInterpolations(colPointsNumber,0);
+    std::vector<double> rowInterpolationsHeadings(colPointsNumber,0);
 
-    std::vector<double> rowInterpolations(nc,0);
-    std::vector<double> rowInterpolationsHeadings(nc,0);
-    if (i==rowHeadings.size()) i = i-1;
-    for(int r = 0; r<nc; r++){
-        int index = i - nc/2 + r;
-        if (index>=1 or index<=rowHeadings.size()-1){
-            rowInterpolationsHeadings[r] = rowHeadings[index];
-            if (nr == 4 and (j == colHeadings.size() or j == 1)) {
-                rowPolicy.setBoundaryType(1);
-            }
-            rowInterpolations[r] = rowPolicy.interpolate(colHeadings, data[index], direction);
+    if (rowPosition==rowHeadings.size()) rowPosition = rowPosition-1;
+
+    for (int iter = 0; iter < colPointsNumber; iter++) {
+        int index = rowPosition - colPointsNumber / 2 + iter;
+        if (index >= 0 && index < rowHeadings.size()) {
+            rowInterpolationsHeadings[iter] = rowHeadings[index];
+            rowInterpolations[iter] = rowPolicy.interpolate(colHeadings, data[index], direction, 1);
+        } else {
+            rowInterpolationsHeadings[iter] = 0;
+            rowInterpolations[iter] = 0;
         }
     }
 
-    if (nc==4 and (i==colHeadings.size() or i==1)){
-        colPolicy.setBoundaryType(2);
-    }
-    height = colPolicy.interpolate(rowInterpolationsHeadings, rowInterpolations, y);
+
+    height = colPolicy.interpolate(rowInterpolationsHeadings, rowInterpolations, y, 2);
     return height;
 }
 

@@ -25,7 +25,7 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
 
     double relativeDirection = waveDirection - shipDirection;
 
-    Interpolator2D <CubicInterpolation,CubicInterpolation> interpolator;
+    Interpolator2D <LinearInterpolation, CubicInterpolation> interpolator{};
     double waveHeight = interpolator.interpolate(wavePeriodHeader,
                                                  waveDirectionHeader,
                                                  waveHeightData,
@@ -44,17 +44,18 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
         fmt::print("\n{}",std::string(40, '-'));
         return shipManeuver = false;
     }
+    return false;
 }
 
 int main() {
 
     ShipData shipData(0, 7.1);
-    WaveData waveData(337.5, 11);
+    WaveData waveData(45, 14);
 
     waveData.loadTestData();
     waveData.loadFullData();
-//    waveData.loadSymmetricData();
-//    waveData.mirrorExtendData();
+    waveData.loadSymmetricData();
+    waveData.mirrorExtendData();
 
 
     bool shipManeuver = checkManeuver(shipData, waveData);

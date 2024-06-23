@@ -3,7 +3,8 @@
 /* ---------------------------------------------------------------------------------------------------- */
 double LinearInterpolation::interpolate(const std::vector<double>& header,
                                         const std::vector<double>& data,
-                                        double x) {
+                                        double x,
+                                        int boundaryType) {
     auto it = std::upper_bound(header.begin(), header.end(), x);
     size_t i = it - header.begin();
     if (i == header.size()) i = i - 1;
@@ -15,7 +16,8 @@ double LinearInterpolation::interpolate(const std::vector<double>& header,
 
     auto y = y0 + (x-x0) * (y1-y0) / (x1-x0);
 
-    fmt::print("\n\nX:\t{}\t{}", x0, x1);
+    fmt::print("\nV:\t{}", x);
+    fmt::print("\nX:\t{}\t{}", x0, x1);
     fmt::print("\nY:\t{}\t{}", y0, y1);
     fmt::print("\nI:\t{}\n", y);
     return y;
@@ -27,7 +29,8 @@ int LinearInterpolation::pointsRequired() {
 /* ---------------------------------------------------------------------------------------------------- */
 double NearestNeighborInterpolation::interpolate(const std::vector<double>& header,
                                                  const std::vector<double>& data,
-                                                 double x) {
+                                                 double x,
+                                                 int boundaryType) {
     auto it = std::upper_bound(header.begin(), header.end(), x);
     size_t i = it - header.begin();
     if (i == header.size()) i = i - 1;
@@ -37,7 +40,8 @@ double NearestNeighborInterpolation::interpolate(const std::vector<double>& head
         y = data[i-1];
     }
 
-    fmt::print("\n\nX:\t{}\t{}", data[i-1], data[i]);
+    fmt::print("\nV:\t{}", x);
+    fmt::print("\nX:\t{}\t{}", data[i-1], data[i]);
     fmt::print("\nY:\t{}\t{}", header[i - 1], header[i]);
     fmt::print("\nI:\t{}\n", y);
     return y;
@@ -48,9 +52,11 @@ int NearestNeighborInterpolation::pointsRequired() {
 /* ---------------------------------------------------------------------------------------------------- */
 double CubicInterpolation::interpolate(const std::vector<double>& header,
                                        const std::vector<double>& data,
-                                       double x) {
+                                       double x,
+                                       int boundaryType) {
     auto it = std::upper_bound(header.begin(), header.end(), x);
     size_t index = it - header.begin();
+    if (index==header.size()) index = index-2;
 
     double x0, x1, x2, x3;
     double y0, y1, y2, y3;
@@ -60,7 +66,8 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
     y1 = data[index - 1];
     y2 = data[index];
 
-//    fmt::print("\n{}",boundaryType);
+    fmt::print("{}", fmt::join(header, " "));
+    fmt::print("\n{} ",header[3]);
 
     if (boundaryType == 0){
         x0 = header[index - 2];
@@ -86,7 +93,6 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
         }
 
     } else {
-        fmt::print("\n{}",index);
         if (index == 2) {
             x0 = header[index-1]*2 - header[index];
             y0 = data[index-1]*2 - data[index];
@@ -95,8 +101,9 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
             y0 = data[index - 2];
         }
         if (index == data.size()-2){
-            x3 = header[index-1]*2 - header[index];
-            y3 = data[index-1]*2 - data[index];
+            fmt::print("\n{}",header[index]);
+            x3 = header[index]*2 - header[index-1];
+            y3 = data[index]*2 - data[index-1];
         } else {
             x3 = header[index + 1];
             y3 = data[index + 1];
@@ -117,14 +124,12 @@ double CubicInterpolation::interpolate(const std::vector<double>& header,
 
     auto y = a + b*(x-x1) + c*(x-x1)*(x-x1) + d*(x-x1)*(x-x1)*(x-x1);
 
-    fmt::print("\n\nX:\t{}\t{}\t{}\t{}", x0, x1, x2, x3);
-    fmt::print("\nY:\t{}\t{}\t{}\t{}", y0, y1, y2, y3);
-    fmt::print("\nI:\t{}\n", y);
+    fmt::print("\nV:\t{}", x);
+    fmt::print("\nX:\t{:.8g}\t{}\t{}\t{:.8g}", x0, x1, x2, x3);
+    fmt::print("\nY:\t{:.8g}\t{}\t{}\t{:.8g}", y0, y1, y2, y3);
+    fmt::print("\nI:\t{:.8g}\n", y);
     return y;
 }
 int CubicInterpolation::pointsRequired() {
     return 4;
-}
-void CubicInterpolation::setBoundaryType(int type) {
-    boundaryType = type;
 }
