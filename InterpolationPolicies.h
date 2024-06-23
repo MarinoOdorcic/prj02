@@ -13,26 +13,31 @@
 
 /* ------------------------------------------------------------------------- */
 struct LinearInterpolation {
-    double interpolate(const std::vector<double>& heading,
-                       const std::vector<double>& data,
-                       double x) const;
-    static int pointsRequired();
+    double interpolate(const std::vector<double>& header,
+                              const std::vector<double>& data,
+                              double x) ;
+    int pointsRequired();
+    void setBoundaryType(int type){};
 };
 
 /* ------------------------------------------------------------------------- */
 struct NearestNeighborInterpolation {
-    double interpolate(const std::vector<double>& heading,
-                       const std::vector<double>& data,
-                       double x) const;
+    double interpolate(const std::vector<double>& header,
+                              const std::vector<double>& data,
+                              double x) ;
     static int pointsRequired();
+    void setBoundaryType(int type){};
 };
 
 /* ------------------------------------------------------------------------- */
 struct CubicInterpolation {
-    double interpolate(const std::vector<double>& heading,
+    double interpolate(const std::vector<double>& header,
                        const std::vector<double>& data,
-                       double x) const;
+                       double x) ;
     static int pointsRequired();
+    void setBoundaryType(int type);
+private:
+    int boundaryType = 0;
 };
 
 #endif //PRJ02_INTERPOLATIONPOLICIES_H

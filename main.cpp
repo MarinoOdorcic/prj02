@@ -25,7 +25,7 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
 
     double relativeDirection = waveDirection - shipDirection;
 
-    Interpolator2D <LinearInterpolation, CubicInterpolation> interpolator;
+    Interpolator2D <CubicInterpolation,CubicInterpolation> interpolator;
     double waveHeight = interpolator.interpolate(wavePeriodHeader,
                                                  waveDirectionHeader,
                                                  waveHeightData,
@@ -49,7 +49,7 @@ bool checkManeuver(ShipData shipData, WaveData waveData){
 int main() {
 
     ShipData shipData(0, 7.1);
-    WaveData waveData(45, 1);
+    WaveData waveData(337.5, 11);
 
     waveData.loadTestData();
     waveData.loadFullData();
